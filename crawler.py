@@ -34,7 +34,6 @@ class twitterListener(StreamListener):
     		file_num += 1
     		file_path = dirName + '/twitter_data' + str(file_num) + '.txt'
     		file = open(file_path, 'a')
-    		return False
 
     	print(data)
     	file.write(data)
@@ -43,6 +42,9 @@ class twitterListener(StreamListener):
 
     def on_error(self, status):
         print(status)
+        if (status == 420):
+        	print("Too many requests for twitter API, please wait 30 seconds.")
+        	return False
 
 
 if __name__ == '__main__':
@@ -56,6 +58,9 @@ if __name__ == '__main__':
 			stream = Stream(auth, l)
 
 			stream.filter(locations=[-124.48, 32.53, -114.13, 42.01])
-		except Exception:
-			print("Exception error")
+		except Exception as e:
+			print("Exception error: " + e)
+			time.sleep(30)
+			print("Resuming crawling")
+			pass
 	f.close()
