@@ -1,7 +1,5 @@
-import os
+import sys
 import json
-import pandas
-import pandas as pd
 import tweepy
 from tweepy import Stream
 from tweepy import OAuthHandler
@@ -12,11 +10,36 @@ consumer_secret = "j0bhW7iOnBuR9XcNEpKdLIyWmrAy2YMhzbP3AIZabL3EmtmJmv"
 access_token = "1149105082442514434-amuNTlY7ef90gLOpIl1lW0Jfkx5NFz"
 access_token_secret = "O8OZ7dkO6zoyCXRu2cnjuEDLZO68HuAn81XHxPUeYlIMS"
 
-class StdOutListener(StreamListener):
+dirName = 'data'
+file_path = dirName + '/twitter_data1.txt'
+file = open(file_path, 'a')
+file_num = 1
+doneCrawling = False
+
+class twitterListener(StreamListener):
 
     def on_data(self, data):
-        print(data)
-        return True
+    	global file
+    	global file_num
+    	global doneCrawling
+
+    	#2GB data reached
+    	if (file_num >= 200):
+    		print("2GB of data reached")
+    		doneCrawling = True
+    		return False
+
+    	if (file.tell() >= 10000000):
+    		file.close()
+    		file_num += 1
+    		file_path = dirName + '/twitter_data' + str(file_num) + '.txt'
+    		file = open(file_path, 'a')
+    		return False
+
+    	print(data)
+    	file.write(data)
+    	return True
+
 
     def on_error(self, status):
         print(status)
@@ -24,11 +47,15 @@ class StdOutListener(StreamListener):
 
 if __name__ == '__main__':
 
-    #This handles Twitter authetification and the connection to Twitter Streaming API
-    l = StdOutListener()
-    auth = OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_token, access_token_secret)
-    stream = Stream(auth, l)
+	while doneCrawling != True:
+		try:
+			#This handles Twitter authetification and the connection to Twitter Streaming API
+			l = twitterListener()
+			auth = OAuthHandler(consumer_key, consumer_secret)
+			auth.set_access_token(access_token, access_token_secret)
+			stream = Stream(auth, l)
 
-    #This line filter Twitter Streams to capture data by the keywords: 'python', 'javascript', 'ruby'
-    stream.filter(locations=[-124.48,32.53,-114.13,42.01])
+			stream.filter(locations=[-124.48, 32.53, -114.13, 42.01])
+		except Exception:
+			print("Exception error")
+	f.close()
