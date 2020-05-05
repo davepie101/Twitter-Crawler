@@ -1,6 +1,9 @@
+#!/usr/bin/env python2
+#!/usr/bin/env tweepy
 import sys
 import json
 import tweepy
+import os
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -10,9 +13,17 @@ consumer_secret = "j0bhW7iOnBuR9XcNEpKdLIyWmrAy2YMhzbP3AIZabL3EmtmJmv"
 access_token = "1149105082442514434-amuNTlY7ef90gLOpIl1lW0Jfkx5NFz"
 access_token_secret = "O8OZ7dkO6zoyCXRu2cnjuEDLZO68HuAn81XHxPUeYlIMS"
 
-dirName = 'data'
-file_path = dirName + '/twitter_data1.txt'
-file = open(file_path, 'a')
+dir_name = 'data'
+file_path = os.path.abspath(dir_name + '/twitter_data1.txt')
+
+# file_path = os.path.abspath(file_path)
+dir_path = os.path.abspath(dir_name)
+
+# If the 'data' folder doesn't exist, create it.
+if not os.path.exists(dir_path):
+	os.makedirs(dir_path)
+
+file = open(file_path, 'a+')
 file_num = 1
 doneCrawling = False
 
