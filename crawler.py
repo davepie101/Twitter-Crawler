@@ -16,7 +16,7 @@ file = open(file_path, 'a')
 file_num = 1
 doneCrawling = False
 
-class twitterListener(StreamListener):
+class twitterCrawler(StreamListener):
 
     def on_data(self, data):
     	global file
@@ -29,12 +29,14 @@ class twitterListener(StreamListener):
     		doneCrawling = True
     		return False
 
+    	#10MB reached. Open new txt file. 
     	if (file.tell() >= 10000000):
     		file.close()
     		file_num += 1
     		file_path = dirName + '/twitter_data' + str(file_num) + '.txt'
     		file = open(file_path, 'a')
 
+    	#Storing data in txt file
     	print(data)
     	file.write(data)
     	return True
@@ -52,12 +54,14 @@ if __name__ == '__main__':
 	while doneCrawling != True:
 		try:
 			#This handles Twitter authetification and the connection to Twitter Streaming API
-			l = twitterListener()
+			l = twitterCrawler()
 			auth = OAuthHandler(consumer_key, consumer_secret)
 			auth.set_access_token(access_token, access_token_secret)
 			stream = Stream(auth, l)
 
+			#Bounded box location. At the moment, it's around california. 
 			stream.filter(locations=[-124.48, 32.53, -114.13, 42.01])
+
 		except Exception as e:
 			print("Exception error: " + e)
 			time.sleep(30)
