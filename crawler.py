@@ -6,6 +6,7 @@ import json
 import tweepy
 import os
 import time
+import re
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -39,13 +40,15 @@ class twitterCrawler(StreamListener):
     	global doneCrawling
 
     	#2GB data reached
-    	if (file_num >= 200):
+    	if (file_num >= 1): # 200
     		print("2GB of data reached \n")
     		doneCrawling = True
+		file.seek(-1, os.SEEK_END) # remove trailing comma
+		file.write(']')            # close array object
     		return False
 
     	#10MB reached. Open new txt file. 
-    	if (file.tell() >= 1000000):
+    	if (file.tell() >= 1): # 1000000
 		print("10 MB OF DATA REACHED, STARTING NEW PAGE \n")
 		file.seek(-1, os.SEEK_END) # remove trailing comma
 		file.write(']')            # close array object
@@ -53,7 +56,7 @@ class twitterCrawler(StreamListener):
 
     		file_num += 1
 		file_path = dir_name + '/twitter_data' + str(file_num) + '.txt'
-    		file = open(file_path, 'a+') # if next files doesn't exist, create + open it
+    		file = open(file_path, 'w+') # if next file doesn't exist, create + open it
 		file.write('[')
 
     	#Storing data in txt file
@@ -62,13 +65,51 @@ class twitterCrawler(StreamListener):
     	file.write(data)
     	return True
 
-
     def on_error(self, status):
         print(status)
         if (status == 420):
         	print("Too many requests for twitter API, please wait 30 seconds.")
         	return False
 
+
+def parse_data():
+	print("PARSING COLLECTED DATA...")
+
+	# Iterate through each of the files...
+	files = os.listdir(dir_path)
+	for file_name in files:
+		path = os.path.abspath('data/' + file_name)
+		data_file = open(path)
+		data = json.load(data_file) # all of the json objects in the page turned into a dict
+
+		# Iterate through tweet objects... 
+		for tweet in data:
+			try:
+				# Get the text field from a tweet
+				tweet_text = tweet["text"]
+				# Search for URL in tweet body
+				# [TODO] - replace '<REGEX>' w/ correct expression + uncomment line
+
+				# result = re.search(<REGEX>, tweet_text)
+				# If tweet contains a URL			
+				if result:
+					# [TODO] - crawl url for title
+
+					# Add field to tweet object
+					# [TODO] - replace '<HTML_TITLE>' w/ title from crawled page + uncomment
+					# tweet['html_field'] = <HTML_TITLE> 
+			except Exception as e:
+				print(e)
+
+		# Turn data back into json and overwrite the page
+		updated_data = json.dumps(data)
+		updated_data_str = str(updated_data)
+	
+		with open (path, "w") as updated_file:
+			updated_file.write(updated_data_str)
+
+		updated_file.close()
+	
 
 if __name__ == '__main__':
 
@@ -82,6 +123,8 @@ if __name__ == '__main__':
 
 			#Bounded box location. At the moment, it's around california. 
 			stream.filter(locations=[-124.48, 32.53, -114.13, 42.01])
+
+			parse_data()
 
 		except Exception as e:
 			print("EXCEPTION:")
