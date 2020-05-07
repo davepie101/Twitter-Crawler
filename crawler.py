@@ -1,9 +1,11 @@
 #!/usr/bin/env python2
 #!/usr/bin/env tweepy
+
 import sys
 import json
 import tweepy
 import os
+import time
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -15,15 +17,17 @@ access_token_secret = "O8OZ7dkO6zoyCXRu2cnjuEDLZO68HuAn81XHxPUeYlIMS"
 
 dir_name = 'data'
 file_path = os.path.abspath(dir_name + '/twitter_data1.txt')
-
-# file_path = os.path.abspath(file_path)
 dir_path = os.path.abspath(dir_name)
 
 # If the 'data' folder doesn't exist, create it.
 if not os.path.exists(dir_path):
 	os.makedirs(dir_path)
 
-file = open(file_path, 'a+')
+file = open(file_path, 'w+') # change back to a+ when finished!
+
+# Adding in brace to store data as an array of tweets.
+file.write('[')
+
 file_num = 1
 doneCrawling = False
 
@@ -36,18 +40,24 @@ class twitterCrawler(StreamListener):
 
     	#2GB data reached
     	if (file_num >= 200):
-    		print("2GB of data reached")
+    		print("2GB of data reached \n")
     		doneCrawling = True
     		return False
 
     	#10MB reached. Open new txt file. 
-    	if (file.tell() >= 10000000):
-    		file.close()
+    	if (file.tell() >= 1000000):
+		print("10 MB OF DATA REACHED, STARTING NEW PAGE \n")
+		file.seek(-1, os.SEEK_END) # remove trailing comma
+		file.write(']')            # close array object
+    		file.close()		   # close file
+
     		file_num += 1
-    		file_path = dirName + '/twitter_data' + str(file_num) + '.txt'
-    		file = open(file_path, 'a')
+		file_path = dir_name + '/twitter_data' + str(file_num) + '.txt'
+    		file = open(file_path, 'a+') # if next files doesn't exist, create + open it
+		file.write('[')
 
     	#Storing data in txt file
+	data = data + ','
     	print(data)
     	file.write(data)
     	return True
@@ -74,8 +84,9 @@ if __name__ == '__main__':
 			stream.filter(locations=[-124.48, 32.53, -114.13, 42.01])
 
 		except Exception as e:
-			print("Exception error: " + e)
+			print("EXCEPTION:")
+			print(e)
 			time.sleep(30)
 			print("Resuming crawling")
 			pass
-	f.close()
+	file.close()
