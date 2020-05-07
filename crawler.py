@@ -34,42 +34,42 @@ doneCrawling = False
 
 class twitterCrawler(StreamListener):
 
-    def on_data(self, data):
-    	global file
-    	global file_num
-    	global doneCrawling
+	def on_data(self, data):
+		global file
+		global file_num
+		global doneCrawling
 
     	#2GB data reached
-    	if (file_num >= 200): # 200
-    		print("2GB of data reached \n")
-    		doneCrawling = True
-		file.seek(-1, os.SEEK_END) # remove trailing comma
-		file.write(']')            # close array object
-    		return False
+		if (file_num >= 200): # 200
+			print("2GB of data reached \n")
+			doneCrawling = True
+			file.seek(-1, os.SEEK_END) # remove trailing comma
+			file.write(']')            # close array object
+			return False
 
     	#10MB reached. Open new txt file. 
-    	if (file.tell() >= 1000000): # 1000000
-		print("10 MB OF DATA REACHED, STARTING NEW PAGE \n")
-		file.seek(-1, os.SEEK_END) # remove trailing comma
-		file.write(']')            # close array object
-    		file.close()		   # close file
+		if (file.tell() >= 1000000): # 1000000
+			print("10 MB OF DATA REACHED, STARTING NEW PAGE \n")
+			file.seek(-1, os.SEEK_END) # remove trailing comma
+			file.write(']')            # close array object
+			file.close()		   # close file
 
-    		file_num += 1
-		file_path = dir_name + '/twitter_data' + str(file_num) + '.txt'
-    		file = open(file_path, 'w+') # if next file doesn't exist, create + open it
-		file.write('[')
+			file_num += 1
+			file_path = dir_name + '/twitter_data' + str(file_num) + '.txt'
+			file = open(file_path, 'w+') # if next file doesn't exist, create + open it
+			file.write('[')
 
     	#Storing data in txt file
-	data = data + ','
-    	print(data)
-    	file.write(data)
-    	return True
+		data = data + ','
+		print(data)
+		file.write(data)
+		return True
 
-    def on_error(self, status):
-        print(status)
-        if (status == 420):
-        	print("Too many requests for twitter API, please wait 30 seconds.")
-        	return False
+	def on_error(self, status):
+		print(status)
+		if (status == 420):
+			print("Too many requests for twitter API, please wait 30 seconds.")
+			return False
 
 
 def parse_data():
@@ -93,6 +93,7 @@ def parse_data():
 				# result = re.search(<REGEX>, tweet_text)
 				# If tweet contains a URL			
 				if result:
+					print("placeholder to avoid indent error")
 					# [TODO] - crawl url for title
 
 					# Add field to tweet object
@@ -109,7 +110,6 @@ def parse_data():
 			updated_file.write(updated_data_str)
 
 		updated_file.close()
-	
 
 if __name__ == '__main__':
 
@@ -125,11 +125,11 @@ if __name__ == '__main__':
 			stream.filter(locations=[-124.48, 32.53, -114.13, 42.01])
 
 			parse_data()
-
 		except Exception as e:
-			print("EXCEPTION:")
-			print(e)
+			print("Exception: " + e)
 			time.sleep(30)
-			print("Resuming crawling")
+			print("Resume crawling")
 			pass
+
 	file.close()
+
