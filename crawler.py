@@ -112,8 +112,8 @@ def parse_data():
 					titles = re.findall(result, htmltext)
 					# Add field to tweet object
 					# [TODO] - replace '<HTML_TITLE>' w/ title from crawled page + uncomment
-					# tweet['html_field'] = <HTML_TITLE> 
-					tweet['html_field'] = titles
+					# tweet['html_title'] = <HTML_TITLE> 
+					tweet['html_title'] = titles
 			except Exception as e:
 				print(e)
 
