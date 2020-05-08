@@ -7,6 +7,8 @@ import tweepy
 import os
 import time
 import re
+import urllib
+
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -88,17 +90,30 @@ def parse_data():
 				# Get the text field from a tweet
 				tweet_text = tweet["text"]
 				# Search for URL in tweet body
+				
 				# [TODO] - replace '<REGEX>' w/ correct expression + uncomment line
+				#looking for any strings which has http or https in the beginning
+				links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet_text)
+				
+				#looking for html formatted title
+				pattern = '<title>(.+?)</title>'
+				
+				#this part, idk what this actually does, but it was in the internet and this made crawling work
+				result = re.compile(pattern)
 
-				# result = re.search(<REGEX>, tweet_text)
 				# If tweet contains a URL			
-				if result:
+				if "http" in links:
 					print("placeholder to avoid indent error")
 					# [TODO] - crawl url for title
-
+					htmlsource = urllib.urlopen(url)
+					htmltext = htmlsource.read()
+					
+					#store title in the variable name "titles"
+					titles = re.findall(result, htmltext)
 					# Add field to tweet object
 					# [TODO] - replace '<HTML_TITLE>' w/ title from crawled page + uncomment
 					# tweet['html_field'] = <HTML_TITLE> 
+					tweet['html_field'] = titles
 			except Exception as e:
 				print(e)
 
