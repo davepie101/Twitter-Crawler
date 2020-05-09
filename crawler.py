@@ -7,8 +7,10 @@ import tweepy
 import os
 import time
 import re
+import requests
 import urllib
 
+from bs4 import BeautifulSoup
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -76,6 +78,8 @@ class twitterCrawler(StreamListener):
 
 def parse_data():
 	print("PARSING COLLECTED DATA...")
+	#requesting for parsing the designated html page
+	headers = requests.utils.default_headers()
 
 	# Iterate through each of the files...
 	files = os.listdir(dir_path)
@@ -93,27 +97,20 @@ def parse_data():
 				
 				# [TODO] - replace '<REGEX>' w/ correct expression + uncomment line
 				#looking for any strings which has http or https in the beginning
-				links = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet_text)
+				url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet_text)
 				
-				#looking for html formatted title
-				pattern = '<title>(.+?)</title>'
-				
-				#this part, idk what this actually does, but it was in the internet and this made crawling work
-				result = re.compile(pattern)
-
 				# If tweet contains a URL			
-				if "http" in links:
+				if "http" in url:
 					print("placeholder to avoid indent error")
 					# [TODO] - crawl url for title
-					htmlsource = urllib.urlopen(url)
-					htmltext = htmlsource.read()
+					new_url = url.replace('\\', '')
+					req = requests.get(new_url, headers)
+					soup = BeautifulSoup(req.content, 'html.parser')
 					
 					#store title in the variable name "titles"
-					titles = re.findall(result, htmltext)
+					title = soup.title.string
 					# Add field to tweet object
-					# [TODO] - replace '<HTML_TITLE>' w/ title from crawled page + uncomment
-					# tweet['html_title'] = <HTML_TITLE> 
-					tweet['html_title'] = titles
+					tweet['html_title'] = title
 			except Exception as e:
 				print(e)
 
