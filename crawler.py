@@ -97,7 +97,7 @@ def parse_data():
 				
 				# [TODO] - replace '<REGEX>' w/ correct expression + uncomment line
 				#looking for any strings which has http or https in the beginning
-				url1 = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet_text)
+				url1 = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', new_text)
 				url2 = url1[0].replace('[', '')
 				url = url2.replace(']', '')
 				# If tweet contains a URL			
