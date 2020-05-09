@@ -93,17 +93,18 @@ def parse_data():
 				# Get the text field from a tweet
 				tweet_text = tweet["text"]
 				# Search for URL in tweet body
+				new_text = tweet_text.replace('\\', '')
 				
 				# [TODO] - replace '<REGEX>' w/ correct expression + uncomment line
 				#looking for any strings which has http or https in the beginning
-				url = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet_text)
-				
+				url1 = re.findall('http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\), ]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', tweet_text)
+				url2 = url1[0].replace('[', '')
+				url = url2.replace(']', '')
 				# If tweet contains a URL			
 				if "http" in url:
 					print("placeholder to avoid indent error")
 					# [TODO] - crawl url for title
-					new_url = url.replace('\\', '')
-					req = requests.get(new_url, headers)
+					req = requests.get(url, headers)
 					soup = BeautifulSoup(req.content, 'html.parser')
 					
 					#store title in the variable name "titles"
