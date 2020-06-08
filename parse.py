@@ -10,7 +10,7 @@ dir_path = os.path.abspath(dir_name)
 if not os.path.exists(dir_path):
 	os.makedirs(dir_path)
 
-file_num = 3
+file_num = 2
 while file_num <= 200:
 	data = []
 	file_name = './data/twitter_data' + str(file_num) + '.txt'
@@ -40,6 +40,10 @@ while file_num <= 200:
 				
 				except requests.exceptions.Timeout:
 					print("Timeout occurred")
+				except requests.exceptions.ConnectionError:
+					print("Connection refused")
+				except requests.exceptions.ChunkedEncodingError:
+					print("Error")
 
 			jsonItem = {
 				"screen_name": screen_name,
