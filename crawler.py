@@ -43,8 +43,6 @@ class twitterCrawler(StreamListener):
 		if (file_num >= 200): # 200
 			print("2GB of data reached \n")
 			doneCrawling = True
-			file.seek(-1, os.SEEK_END) # remove trailing comma
-			file.write(']')            # close array object
 			return False
 
     	#10MB reached. Open new txt file. 
