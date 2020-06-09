@@ -45,6 +45,7 @@ def index():
 	directory = FSDirectory.open(indexFile)
 
 	analyzer = StandardAnalyzer()
+	analyzer = LimitTokenCountAnalyzer(analyzer, 128479)
 	writeConfig = IndexWriterConfig(analyzer)
 	writer = IndexWriter(directory, writeConfig)
 
@@ -62,6 +63,7 @@ def index():
 			writer.addDocument(doc)
 
 		file_number += 1
+	writer.close()
 
 if __name__ == '__main__':
 	lucene.initVM()
