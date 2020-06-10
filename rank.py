@@ -1,4 +1,4 @@
-#!/usr/bin/env python  
+#!/usr/bin/env python3  
 
 import os
 import sys
@@ -33,7 +33,7 @@ class Rank:
         args = len(sys.argv) - 1
 
         if args < 1:
-            print "\n No query was submitted! \n"
+            print ("\n No query was submitted! \n")
         else:
             query_string = ""
             position = 1
@@ -41,7 +41,7 @@ class Rank:
                 query_string = query_string + str(sys.argv[position]) + " "
                 position = position + 1
 
-            print "Searching for '" + query_string + "'"
+            print ("Searching for '" + query_string + "'")
     
             fields_to_search = ["text", "page title", "date"]
             filter_date = 'date:"May 25"'    
@@ -52,7 +52,7 @@ class Rank:
             updated_query = MultiFieldQueryParser.parse(parser, filtered_query)
             scored_documents = searcher.search(updated_query, 10).scoreDocs # array of docs
         
-            print "Found " + str((len(scored_documents))) + " matches in the collection."
+            print ("Found " + str((len(scored_documents))) + " matches in the collection.")
         
             for doc in scored_documents:
                 result = searcher.doc(doc.doc)
@@ -62,9 +62,9 @@ class Rank:
                 link = result.get("page title")
                 date = result.get("date")
                 if not link:
-                    print username + "\n"+ tweet_body + "\n\n"
+                    print (username + "\n"+ tweet_body + "\n\n")
                 else:
-                    print username + "\n"+ tweet_body + "\n" + date + "\n" + link + "\n\n"
+                    print (username + "\n"+ tweet_body + "\n" + date + "\n" + link + "\n\n")
 
     if __name__ == '__main__':
         lucene.initVM()
