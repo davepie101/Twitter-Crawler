@@ -1,10 +1,40 @@
-<!-- 1st scored your_list_element[0] -->
-<!-- 2nd scored your_list_element[1] -->
-<!-- 3rd scored your_list_element[2] -->
-<!-- so on..-->
+<!DOCTYPE html>
+<style>
+  .center {
+    text-align: center;
+    margin: 0 auto;
+    width: 250px;
+  }
 
-<ul>
-	{% for your_list_element in your_list %}
-      <li>{{ your_list_element }} </li>
-  {% endfor %}
- </ul>
+  .bottom {
+    position: fixed;
+    bottom: 0;
+  }
+</style>
+
+<html>
+  <head>
+    <title>Twitter Search Engine</title>
+  </head>
+  <body style="background-color:lightblue;">
+    <div class="center">
+      <h1>Twitter Search Engine</h1>
+      <form method="POST">
+        <input name="text">
+        <input type="submit">
+      </form>
+      <p>No results were found</p>
+    </div>
+  </body>
+
+  <body>
+    <div class="bottom">
+      <h3><u>Created by</u></h3>
+      <ul style="list-style-type:none;">
+        <li>Hongchao Yu</li>
+        <li>Deven Fafard</li>
+        <li>Minwhan Oh</li>
+        <li>Saikrishna Reddy</li>
+      </ul>
+  </body>
+</html>
