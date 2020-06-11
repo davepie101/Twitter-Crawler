@@ -3,12 +3,18 @@
   .center {
   	text-align: center;
   	margin: 0 auto;
-  	width: 250px;
+  	width: 500px;
   }
 
   .bottom {
   	position: fixed;
   	bottom: 0;
+  }
+
+  .left {
+    text-align: left;
+    margin: 0 auto;
+    width: 1000px;
   }
 </style>
 
@@ -24,8 +30,11 @@
   	  	<input type="submit">
   	  </form>
   	</div>
-  </body>
+    {% block results %} 
+    {% endblock %}
 
+  </body>
+  {% block created %}
   <body>
   	<div class="bottom">
   	  <h3><u>Created by</u></h3>
@@ -36,4 +45,5 @@
   	  	<li>Saikrishna Reddy</li>
   	  </ul>
   </body>
+  {% endblock %}
 </html>

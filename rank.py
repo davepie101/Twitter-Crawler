@@ -20,7 +20,7 @@ class SimpleSimiliarity(PythonClassicSimilarity):
 
 class Rank:
 
-    def search(query):
+    def search(self, query):
         lucene.initVM()
         luceneDirectory = "/index/"
 
@@ -66,8 +66,4 @@ class Rank:
             print(scoredTweet)
 
         return results
-
-    if __name__ == '__main__':
-        lucene.initVM()
-        search("trump")
 
