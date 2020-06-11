@@ -30,48 +30,44 @@ class Rank:
         searcher = IndexSearcher(reader)
         analyzer = StandardAnalyzer()
 
-        args = len(sys.argv) - 1
+        #args = len(sys.argv) - 1
 
-        if args < 1:
-            print ("\n No query was submitted! \n")
-        else:
+        #if args < 1:
+         #   print ("\n No query was submitted! \n")
+        #else:
             #query_string = ""
             #position = 1
             #while(args >= position):
                 #query_string = query_string + str(sys.argv[position]) + " "
                 #position = position + 1
 
-            print ("Searching for '" + query + "'")
+        print ("Searching for '" + query + "'")
     
-            fields_to_search = ["text", "page title", "date"]
-            filter_date = 'date:"May 25"'    
+        fields_to_search = ["text", "page title", "date"]
+        filter_date = 'date:"May 25"'    
       
-            filtered_query = filter_date + "AND " + query
+        filtered_query = filter_date + "AND " + query
 
-            parser = MultiFieldQueryParser(fields_to_search, analyzer)
-            updated_query = MultiFieldQueryParser.parse(parser, filtered_query)
-            scored_documents = searcher.search(updated_query, 10).scoreDocs # array of docs
+        parser = MultiFieldQueryParser(fields_to_search, analyzer)
+        updated_query = MultiFieldQueryParser.parse(parser, filtered_query)
+        scored_documents = searcher.search(updated_query, 10).scoreDocs # array of docs
         
-            print ("Found " + str((len(scored_documents))) + " matches in the collection.")
+        print ("Found " + str((len(scored_documents))) + " matches in the collection.")
         
-            results = []
-            for doc in scored_documents:
-                scoredTweet = dict()
-                scoredTweet['score'] = doc.score
-                result = searcher.doc(doc.doc)
-                scoredTweet['username'] = result.get("username")
-                scoredTweet['tweet_body'] = result.get("text")
-                scoredTweet['date'] = result.get("date")
-                results.append(scoredTweet)
+        results = []
+        for doc in scored_documents:
+            scoredTweet = dict()
+            scoredTweet['score'] = doc.score
+            result = searcher.doc(doc.doc)
+            scoredTweet['username'] = result.get("username")
+            scoredTweet['tweet_body'] = result.get("text")
+            scoredTweet['date'] = result.get("date")
+            results.append(scoredTweet)
+            print(scoredTweet)
 
-                if not link:
-                    print (username + "\n"+ tweet_body + "\n\n")
-                else:
-                    print (username + "\n"+ tweet_body + "\n" + date + "\n" + link + "\n\n")
-
-            return results
+        return results
 
     if __name__ == '__main__':
         lucene.initVM()
-        #search()
+        search("trump")
 
