@@ -1,4 +1,4 @@
-#!/usr/bin/env python3  
+#!/usr/bin/env python  
 
 import os
 import sys
@@ -12,16 +12,6 @@ from org.apache.lucene.queryparser.classic import QueryParser, QueryParserBase, 
 from org.apache.lucene.store import RAMDirectory, FSDirectory
 from org.apache.lucene.analysis.standard import StandardAnalyzer
 from org.apache.pylucene.search.similarities import PythonClassicSimilarity
-
-class ScoredTweet:
-    def __init__(username, text, location, page_title, date, score):
-        self.username = username
-        self.text = text
-        self.location = location
-        self.page_title = page_title
-        self.date = date
-        self.score = score
-        return self
 
 class SimpleSimiliarity(PythonClassicSimilarity):
 
@@ -66,15 +56,12 @@ class Rank:
         
             results = []
             for doc in scored_documents:
-                score = doc.score
+                scoredTweet = dict()
+                scoredTweet['score'] = doc.score
                 result = searcher.doc(doc.doc)
-                username = result.get("username")
-                tweet_body = result.get("text")
-                location = result.get("location")
-                link = result.get("page title")
-                date = result.get("date")
-
-                scoredTweet = ScoredTweet(username, tweet_body, location, link, date, )
+                scoredTweet['username'] = result.get("username")
+                scoredTweet['tweet_body'] = result.get("text")
+                scoredTweet['date'] = result.get("date")
                 results.append(scoredTweet)
 
                 if not link:
@@ -86,5 +73,5 @@ class Rank:
 
     if __name__ == '__main__':
         lucene.initVM()
-        search()
+        #search()
 
